@@ -28,12 +28,12 @@ curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' 
 echo -e "\n\033[0;32m[!] using sublist3r...\n"
 sublist3r -d $1 | grep $1 | tee -a $tempfile 
 echo -e "\n\033[0;32m[!] http probing...\n"
-cat $tempfile | httprobe | grep $1 | sort -u | tee -a domains.out 
+cat $tempfile | httprobe | grep $1 | sort -u | tee -a domains_$1 
 rm $tempfile
-mkdir -p sdrscreenshots && cd sdrscreenshots
+mkdir -p sdrscreenshots_$1 && cd sdrscreenshots_$1
 echo -e "\n\033[0;32m[!] taking screenshots using gowitness...\n"
 log=$(mktemp)
-/opt/gowitness -T 300 file --source ../domains.out 2> $log
+/opt/gowitness -T 300 file --source ../domains_$1 2> $log
 /opt/gowitness report generate
-grep 'error' $log | grep 'http' | tee error_gowitness.log
+grep 'error' $log | grep 'http' | tee error_$1.log
 rm $log
