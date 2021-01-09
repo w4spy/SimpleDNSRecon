@@ -79,7 +79,7 @@ function dns_resolution {
 	
 	echo -e "${green} [!] HTTP probing ${nc}"
 	finallist=$(echo "$finallist" | grep "$domain" | sort -u)
-    httprobed+=$(echo $finallist | $httpx -silent -timeout 30 )
+    httprobed+=$(echo "$finallist" | $httpx -silent -timeout 30 )
 	echo -e "${green} [!] writing urls to disk ${nc}"
 	echo "$httprobed" > "httpx-${domain}.txt"
 }
